@@ -11,7 +11,7 @@ const Home = ({ displayPosts, arePostsLoading, axiosGetError }) => {
       if (sharedLayoutMainDiv !== undefined) {
         sharedLayoutMainDiv.scrollTo({
           top: 0,
-          behavior: "smooth",
+          // behavior: "smooth",
         });
       }
     }

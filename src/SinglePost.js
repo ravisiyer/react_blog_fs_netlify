@@ -18,7 +18,7 @@ const SinglePost = () => {
       if (sharedLayoutMainDiv !== undefined) {
         sharedLayoutMainDiv.scrollTo({
           top: 0,
-          behavior: "smooth",
+          // behavior: "smooth",
         });
       }
     }
