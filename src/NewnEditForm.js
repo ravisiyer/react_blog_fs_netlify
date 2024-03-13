@@ -46,12 +46,6 @@ const NewnEditForm = ({
           <button type="button">Cancel</button>
         </Link>
       </p>
-      {/* <Link to="/" style={{ display: "block" }}>
-        Back to Posts
-      </Link>
-      <Link to="/">
-        <button type="button">Back to Posts</button>
-      </Link>{" "} */}
     </form>
   );
 };

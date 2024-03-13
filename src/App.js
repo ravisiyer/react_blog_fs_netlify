@@ -53,8 +53,6 @@ function App() {
     setPostsLoadingError,
   ]);
 
-  // console.log(process.env.REACT_APP_API_URL);
-
   const displayPosts =
     searchPosts.trim().length === 0
       ? [...posts]

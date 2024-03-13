@@ -11,14 +11,11 @@ const SinglePost = () => {
 
   const postBodyDiv = useRef();
   useEffect(() => {
-    // console.log(postBodyDiv);
     if (postBodyDiv.current !== undefined) {
       const sharedLayoutMainDiv = postBodyDiv.current.parentElement;
-      // console.log(sharedLayoutMainDiv);
       if (sharedLayoutMainDiv !== undefined) {
         sharedLayoutMainDiv.scrollTo({
           top: 0,
-          // behavior: "smooth",
         });
       }
     }

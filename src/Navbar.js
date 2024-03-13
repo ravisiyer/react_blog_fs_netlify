@@ -12,8 +12,6 @@ const Navbar = () => {
     <div className="Navbar">
       <Link to="/">Posts</Link>
       <Link to="/newpost">New</Link>
-      {/* <Link to="/">List of Posts</Link>
-      <Link to="/newpost">New Post</Link> */}
       <form
         className="SearchPostsForm"
         style={pathname !== "/" ? { visibility: "hidden" } : null}
