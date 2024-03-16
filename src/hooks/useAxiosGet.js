@@ -1,10 +1,13 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
 
-const useAxiosGet = (url) => {
+const useAxiosGet = (url, user) => {
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [axiosGetError, setAxiosGetError] = useState("");
+  const [axiosGetError, setAxiosGetError] = useState({
+    message: "",
+    unauthorized: false,
+  });
 
   useEffect(() => {
     const controller = new AbortController();
@@ -12,14 +15,20 @@ const useAxiosGet = (url) => {
     const getAxiosData = async () => {
       try {
         const res = await axios.get(url, {
+          headers: {
+            Authorization: `Basic ${user.authdata}`,
+          },
           signal: controller.signal,
         });
         setData(res.data);
-        setAxiosGetError("");
+        setAxiosGetError({ message: "", unauthorized: false });
         setIsLoading(false);
       } catch (error) {
         if (!controller.signal.aborted) {
-          setAxiosGetError(error.message);
+          const errData = { message: error.message, unauthorized: false };
+          if (error.response && error.response.status === 401)
+            errData.unauthorized = true;
+          setAxiosGetError(errData);
           setData([]);
           setIsLoading(false);
         }
@@ -28,12 +37,12 @@ const useAxiosGet = (url) => {
     const cleanup = () => {
       controller.abort();
       setData([]);
-      setAxiosGetError("");
+      setAxiosGetError({ message: "", unauthorized: false });
       setIsLoading(true);
     };
     getAxiosData();
     return cleanup;
-  }, [url]);
+  }, [url, user]);
 
   return { data, isLoading, axiosGetError };
 };

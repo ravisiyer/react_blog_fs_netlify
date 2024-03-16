@@ -23,7 +23,7 @@ const Footer = () => {
       >
         {process.env.REACT_APP_SHOW_FOOTER_NOTE === "Y"
           ? process.env.REACT_APP_FOOTER_NOTE ||
-            "App. data may be deleted anytime!"
+            "Data may be deleted anytime by administrator!"
           : null}
       </p>
     </footer>

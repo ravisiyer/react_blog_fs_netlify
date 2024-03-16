@@ -9,8 +9,10 @@ import EditPost from "./EditPost";
 import NotFound from "./NotFound";
 import useAxiosGet from "./hooks/useAxiosGet";
 import { useStoreActions, useStoreState } from "easy-peasy";
+import SetUserCred from "./SetUserCred";
 
 function App() {
+  const user = useStoreState((state) => state.user);
   const posts = useStoreState((state) => state.posts);
   const setPosts = useStoreActions((actions) => actions.setPosts);
   const searchPosts = useStoreState((state) => state.searchPosts);
@@ -21,27 +23,31 @@ function App() {
   const setPostsLoadingError = useStoreActions(
     (actions) => actions.setPostsLoadingError
   );
+  const setUnauthorized = useStoreActions((actions) => actions.setUnauthorized);
 
   const {
     data,
     isLoading: isDataLoading,
     axiosGetError,
-  } = useAxiosGet(process.env.REACT_APP_API_URL);
+  } = useAxiosGet(process.env.REACT_APP_API_URL, user);
 
   useEffect(() => {
-    if (axiosGetError !== "") {
+    if (axiosGetError.message !== "") {
       setPosts([]);
       setArePostsLoading(false);
-      setPostsLoadingError(axiosGetError);
+      setPostsLoadingError(axiosGetError.message);
+      setUnauthorized(axiosGetError.unauthorized);
     } else if (!isDataLoading) {
       setPosts(data.data);
       setArePostsLoading(false);
       setPostsLoadingError("");
+      setUnauthorized(false);
     }
     const cleanup = () => {
       setPosts([]);
       setArePostsLoading(true);
       setPostsLoadingError("");
+      setUnauthorized(false);
     };
     return cleanup;
   }, [
@@ -51,6 +57,7 @@ function App() {
     setPosts,
     setArePostsLoading,
     setPostsLoadingError,
+    setUnauthorized,
   ]);
 
   const displayPosts =
@@ -63,7 +70,6 @@ function App() {
           );
         });
   displayPosts.reverse();
-
   return (
     <BrowserRouter>
       <Routes>
@@ -74,6 +80,15 @@ function App() {
               <Home
                 displayPosts={displayPosts}
                 arePostsLoading={arePostsLoading}
+                axiosGetError={axiosGetError}
+              />
+            }
+          />
+          <Route
+            path="setuser"
+            element={
+              <SetUserCred
+                isDataLoading={isDataLoading}
                 axiosGetError={axiosGetError}
               />
             }

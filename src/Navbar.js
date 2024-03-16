@@ -27,6 +27,7 @@ const Navbar = () => {
           }}
         />
       </form>
+      <Link to="/setuser">User</Link>
     </div>
   );
 };

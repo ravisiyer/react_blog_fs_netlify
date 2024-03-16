@@ -1,4 +1,5 @@
 import { useRef, useEffect } from "react";
+import { Link } from "react-router-dom";
 import PostsList from "./PostsList";
 
 const Home = ({ displayPosts, arePostsLoading, axiosGetError }) => {
@@ -18,8 +19,16 @@ const Home = ({ displayPosts, arePostsLoading, axiosGetError }) => {
     <div ref={homePageDiv} className="posts-list">
       {arePostsLoading ? (
         <p>Loading ...</p>
-      ) : axiosGetError !== "" ? (
-        <p>Get Data error. Details: {axiosGetError}</p>
+      ) : axiosGetError.message !== "" ? (
+        <>
+          <p>Get Data error. Details: {axiosGetError.message}</p>
+          {axiosGetError.unauthorized ? (
+            <>
+              <span>Unauthorized user! Try </span>
+              <Link to="/setuser">changing user credentials</Link>
+            </>
+          ) : null}
+        </>
       ) : (
         <PostsList displayPosts={displayPosts} />
       )}

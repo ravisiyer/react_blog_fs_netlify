@@ -110,6 +110,20 @@ footer {
   max-width: 400px;
 }
 
+.SetUserCredForm {
+  padding: 0.5rem;
+  max-width: 600px;
+}
+
+.SetUserCredForm label {
+  display: block;
+}
+
+.SetUserCredForm input {
+  border-radius: 0.25rem;
+  border: 1px solid black;
+}
+
 .SearchPostsForm input {
   border-radius: 0.25rem;
   padding: 0.25rem;
@@ -130,7 +144,8 @@ textarea {
 }
 
 .SinglePost button,
-.NewnEditPostForm button {
+.NewnEditPostForm button,
+.SetUserCredForm button {
   margin-top: 1rem;
   margin-right: 0.5rem;
   margin-bottom: 1rem;

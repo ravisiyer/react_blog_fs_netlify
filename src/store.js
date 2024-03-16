@@ -6,6 +6,11 @@ const store = createStore({
   setPosts: action((state, payload) => {
     state.posts = payload;
   }),
+
+  user: { name: "", password: "", authdata: "" },
+  setUser: action((state, payload) => {
+    state.user = payload;
+  }),
   searchPosts: "",
   setSearchPosts: action((state, payload) => {
     state.searchPosts = payload;
@@ -17,6 +22,10 @@ const store = createStore({
   postsLoadingError: "",
   setPostsLoadingError: action((state, payload) => {
     state.postsLoadingError = payload;
+  }),
+  unauthorized: false,
+  setUnauthorized: action((state, payload) => {
+    state.unauthorized = payload;
   }),
   countPosts: computed((state) => state.posts.length),
   deletePost: thunk(async (actions, payload, helpers) => {

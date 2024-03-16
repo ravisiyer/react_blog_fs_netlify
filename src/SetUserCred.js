@@ -1,0 +1,92 @@
+import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import axiosAPI from "./api/api";
+import { useStoreActions, useStoreState } from "easy-peasy";
+
+const SetUserCred = ({ isDataLoading, axiosGetError }) => {
+  const user = useStoreState((state) => state.user);
+  const [formUsername, setFormUsername] = useState(user.name);
+  const [password, setPassword] = useState(user.password);
+  const setUser = useStoreActions((actions) => actions.setUser);
+  const [userCredStatus, setUserCredStatus] = useState("");
+
+  useEffect(() => {
+    if (axiosGetError.message !== "") {
+      if (axiosGetError.unauthorized) {
+        setUserCredStatus(
+          "Backend API failure with status code 401 (Unauthorized)! Backend API is up but authentication " +
+            "seems to be enabled and user credentials are invalid."
+        );
+      } else {
+        setUserCredStatus(
+          "Backend API failure! " +
+            axiosGetError.message +
+            ". Backend API seems to be down."
+        );
+      }
+    } else if (!isDataLoading) {
+      setUserCredStatus(
+        "Backend API success! Either backend authentication is disabled or " +
+          "backend authentication is enabled and user credentials are valid."
+      );
+    }
+    const cleanup = () => {
+      setUserCredStatus("");
+    };
+    return cleanup;
+  }, [axiosGetError, isDataLoading]);
+
+  useEffect(() => {
+    setUserCredStatus("");
+  }, []);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const authdata = btoa(formUsername + ":" + password);
+    axiosAPI.defaults.headers.common["Authorization"] = `Basic ${authdata}`;
+    setUser({ name: formUsername, password: password, authdata: authdata });
+  };
+
+  return (
+    <form className="SetUserCredForm" onSubmit={handleSubmit}>
+      <h2>Set and Test User Credentials</h2>
+      <p>
+        User credentials are needed only if backend authentication is enabled.
+      </p>
+      <p>
+        Note that posts are common to (shared by) all users (to simplify
+        program).
+      </p>
+      <br />
+      <div className="SetUserCredRow">
+        <label htmlFor="username">Username</label>
+        <input
+          type="text"
+          id="username"
+          autoComplete="username"
+          value={formUsername}
+          onChange={(e) => setFormUsername(e.target.value)}
+        />
+      </div>
+      <div className="SetUserCredRow">
+        <label htmlFor="password">Password</label>
+        <input
+          type="password"
+          id="password"
+          autoComplete="current-password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+      </div>
+      <button type="submit">Set & Test User Credentials</button>
+      <Link to="/">
+        <button type="button">Posts</button>
+      </Link>
+      <p>Test result: {userCredStatus ? userCredStatus : null} </p>
+      <br />
+      <p>Backend API URL: {process.env.REACT_APP_API_URL}</p>
+    </form>
+  );
+};
+export default SetUserCred;
