@@ -1,9 +1,10 @@
 import { useRef, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import PostsList from "./PostsList";
 
 const Home = ({ displayPosts, arePostsLoading, axiosGetError }) => {
   const homePageDiv = useRef();
+  const navigate = useNavigate();
   useEffect(() => {
     if (homePageDiv.current !== undefined) {
       const sharedLayoutMainDiv = homePageDiv.current.parentElement;
@@ -14,6 +15,12 @@ const Home = ({ displayPosts, arePostsLoading, axiosGetError }) => {
       }
     }
   }, []);
+
+  useEffect(() => {
+    if (axiosGetError.message !== "" && axiosGetError.unauthorized) {
+      navigate("/setuser");
+    }
+  }, [axiosGetError, navigate]);
 
   return (
     <div ref={homePageDiv} className="posts-list">

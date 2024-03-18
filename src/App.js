@@ -24,6 +24,7 @@ function App() {
     (actions) => actions.setPostsLoadingError
   );
   const setUnauthorized = useStoreActions((actions) => actions.setUnauthorized);
+  const setNetworkError = useStoreActions((actions) => actions.setNetworkError);
 
   const {
     data,
@@ -37,17 +38,20 @@ function App() {
       setArePostsLoading(false);
       setPostsLoadingError(axiosGetError.message);
       setUnauthorized(axiosGetError.unauthorized);
+      setNetworkError(axiosGetError.networkError);
     } else if (!isDataLoading) {
       setPosts(data.data);
       setArePostsLoading(false);
       setPostsLoadingError("");
       setUnauthorized(false);
+      setNetworkError(false);
     }
     const cleanup = () => {
       setPosts([]);
       setArePostsLoading(true);
       setPostsLoadingError("");
       setUnauthorized(false);
+      setNetworkError(false);
     };
     return cleanup;
   }, [
@@ -58,6 +62,7 @@ function App() {
     setArePostsLoading,
     setPostsLoadingError,
     setUnauthorized,
+    setNetworkError,
   ]);
 
   const displayPosts =

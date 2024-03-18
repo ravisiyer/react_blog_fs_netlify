@@ -14,7 +14,8 @@ const PostsList = ({ displayPosts }) => {
               </Link>
               <p>Created: {dayjs(post.datetime).format("MMM DD, YYYY")}</p>
               <p>
-                {post.body.length > 25 ? post.body.slice(0, 25) : post.body}
+                {(post.body.length > 50 ? post.body.slice(0, 50) : post.body) +
+                  " ..."}
               </p>
             </div>
           );

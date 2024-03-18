@@ -7,6 +7,7 @@ const useAxiosGet = (url, user) => {
   const [axiosGetError, setAxiosGetError] = useState({
     message: "",
     unauthorized: false,
+    networkError: false,
   });
 
   useEffect(() => {
@@ -21,13 +22,24 @@ const useAxiosGet = (url, user) => {
           signal: controller.signal,
         });
         setData(res.data);
-        setAxiosGetError({ message: "", unauthorized: false });
+        setAxiosGetError({
+          message: "",
+          unauthorized: false,
+          networkError: false,
+        });
         setIsLoading(false);
       } catch (error) {
         if (!controller.signal.aborted) {
-          const errData = { message: error.message, unauthorized: false };
+          const errData = {
+            message: error.message,
+            unauthorized: false,
+            networkError: false,
+          };
           if (error.response && error.response.status === 401)
             errData.unauthorized = true;
+          if (!error.response && error.code === "ERR_NETWORK") {
+            errData.networkError = true;
+          }
           setAxiosGetError(errData);
           setData([]);
           setIsLoading(false);
@@ -37,7 +49,11 @@ const useAxiosGet = (url, user) => {
     const cleanup = () => {
       controller.abort();
       setData([]);
-      setAxiosGetError({ message: "", unauthorized: false });
+      setAxiosGetError({
+        message: "",
+        unauthorized: false,
+        networkError: false,
+      });
       setIsLoading(true);
     };
     getAxiosData();

@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 import axiosAPI from "./api/api";
 import { useStoreActions, useStoreState } from "easy-peasy";
 
@@ -8,6 +7,9 @@ const SetUserCred = ({ isDataLoading, axiosGetError }) => {
   const [formUsername, setFormUsername] = useState(user.name);
   const [password, setPassword] = useState(user.password);
   const setUser = useStoreActions((actions) => actions.setUser);
+  const setArePostsLoading = useStoreActions(
+    (actions) => actions.setArePostsLoading
+  );
   const [userCredStatus, setUserCredStatus] = useState("");
 
   useEffect(() => {
@@ -36,28 +38,19 @@ const SetUserCred = ({ isDataLoading, axiosGetError }) => {
     return cleanup;
   }, [axiosGetError, isDataLoading]);
 
-  useEffect(() => {
-    setUserCredStatus("");
-  }, []);
-
   const handleSubmit = (e) => {
     e.preventDefault();
 
     const authdata = btoa(formUsername + ":" + password);
     axiosAPI.defaults.headers.common["Authorization"] = `Basic ${authdata}`;
+    // Below code will trigger useEffect in useAxiosGet which will get posts
     setUser({ name: formUsername, password: password, authdata: authdata });
+    setArePostsLoading(true);
   };
 
   return (
     <form className="SetUserCredForm" onSubmit={handleSubmit}>
       <h2>Set and Test User Credentials</h2>
-      <p>
-        User credentials are needed only if backend authentication is enabled.
-      </p>
-      <p>
-        Note that posts are common to (shared by) all users (to simplify
-        program).
-      </p>
       <br />
       <div className="SetUserCredRow">
         <label htmlFor="username">Username</label>
@@ -80,12 +73,14 @@ const SetUserCred = ({ isDataLoading, axiosGetError }) => {
         />
       </div>
       <button type="submit">Set & Test User Credentials</button>
-      <Link to="/">
-        <button type="button">Posts</button>
-      </Link>
       <p>Test result: {userCredStatus ? userCredStatus : null} </p>
       <br />
       <p>Backend API URL: {process.env.REACT_APP_API_URL}</p>
+      <br />
+      <p>
+        Note that posts are common to (shared by) all users (to simplify
+        program).
+      </p>
     </form>
   );
 };

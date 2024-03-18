@@ -27,6 +27,10 @@ const store = createStore({
   setUnauthorized: action((state, payload) => {
     state.unauthorized = payload;
   }),
+  networkError: false,
+  setNetworkError: action((state, payload) => {
+    state.networkError = payload;
+  }),
   countPosts: computed((state) => state.posts.length),
   deletePost: thunk(async (actions, payload, helpers) => {
     try {
